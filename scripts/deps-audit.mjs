@@ -41,9 +41,11 @@ if (has('package.json')) {
   if (!cmdExists(mgr) && mgr !== 'npm') mgr = cmdExists('npm') ? 'npm' : mgr;
 
   let res;
-  if (mgr === 'pnpm') res = run('pnpm audit --json 2>/dev/null || pnpm audit');
-  else if (mgr === 'yarn') res = run('yarn npm audit --json 2>/dev/null || yarn audit');
-  else res = run('npm audit --json 2>/dev/null || npm audit');
+  // Use --json only. run() captures stdout even on non-zero exit (auditors exit 1
+  // when vulns exist). Do NOT append a text fallback — it would corrupt the JSON.
+  if (mgr === 'pnpm') res = run('pnpm audit --json');
+  else if (mgr === 'yarn') res = run('yarn npm audit --json');
+  else res = run('npm audit --json');
 
   report.ran = `${mgr} audit`;
   report.raw = res.out.slice(0, 20000);
