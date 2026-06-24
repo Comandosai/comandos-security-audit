@@ -61,13 +61,26 @@ if (has('package.json')) {
       console.log(`Vulnerabilities: ${v.critical || 0} critical · ${v.high || 0} high · ${v.moderate || 0} moderate · ${v.low || 0} low`);
       console.log(total === 0 ? '✅ No known vulnerable dependencies.\n' : '🔴 Run `' + mgr + ' audit fix` and review — details below.\n');
     } else {
-      console.log(`Ecosystem: Node (${mgr}). Could not parse JSON; raw output below.\n`);
+      console.log(`Ecosystem: Node (${mgr}). Audit ran but returned no parseable vulnerability summary.`);
+      console.log(`Run \`${mgr} audit\` manually for details.\n`);
     }
   } catch {
-    console.log(`Ecosystem: Node (${mgr}). Text output (no lockfile → may be limited):\n`);
-    console.log(res.out.slice(0, 3000));
+    // JSON didn't parse — most common cause is a missing lockfile (ENOLOCK).
+    // Do NOT dump raw npm error text at the user (SKILL.md: no raw scanner output).
+    const noLock = !has('package-lock.json') && !has('pnpm-lock.yaml') && !has('yarn.lock');
+    const enolock = /ENOLOCK|requires existing (shrinkwrap|lockfile)|package-lock/i.test(res.out);
+    console.log(`Ecosystem: Node (${mgr}).`);
+    if (noLock || enolock) {
+      report.note = 'No lockfile — audit incomplete. Run `npm i --package-lock-only` then re-run.';
+      console.log('⚠️  ' + report.note + '\n');
+    } else {
+      report.note = `Could not parse ${mgr} audit output. Run \`${mgr} audit\` manually.`;
+      console.log('⚠️  ' + report.note + '\n');
+    }
   }
-  if (!has('package-lock.json') && !has('pnpm-lock.yaml') && !has('yarn.lock')) {
+  if (has('package-lock.json') || has('pnpm-lock.yaml') || has('yarn.lock')) {
+    // lockfile present — nothing extra to warn about
+  } else if (!report.note) {
     report.note = 'No lockfile found — audit may be incomplete. Recommend committing a lockfile.';
     console.log('⚠️  ' + report.note + '\n');
   }
