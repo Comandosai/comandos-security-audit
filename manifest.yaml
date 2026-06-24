@@ -1,0 +1,107 @@
+schema: comandos-skill-manifest/v1
+slug: comandos-security-audit
+name: Аудит Безопасности COMANDOS
+version: 1.0.0
+released_at: 2026-06-24
+
+card:
+  tagline: >-
+    Комплексная проверка безопасности любого проекта — сайт, бот, приложение или
+    API. Понятный отчёт: что небезопасно и как починить.
+  description: >-
+    Навык проводит комплексный аудит безопасности вашего проекта и выдаёт отчёт,
+    понятный человеку без технического бэкграунда. Сам определяет тип проекта
+    (сайт, веб-приложение, Telegram-бот, API, мобильное приложение, скрипты) и
+    прогоняет пять универсальных проверок: утёкшие ключи и токены (в коде и в
+    истории git), уязвимые библиотеки, дыры в авторизации и доступах, опасные
+    настройки и деплой, уязвимости кода по списку OWASP.
+
+    Если проект уже опубликован — по вашему разрешению проверит и живую версию:
+    HTTPS, заголовки безопасности, не отдаётся ли наружу .env или .git, реагирует
+    ли бот на чужие админ-команды. Все проверки только читающие и неразрушающие:
+    никаких атак, перебора паролей или сканирования чужих ресурсов.
+
+    На выходе — отчёт с оценкой 🔴/🟡/🟢, где каждая находка объяснена простыми
+    словами: что это, чем грозит и как починить за три шага. Подходит и для
+    одноразовой проверки перед запуском, и как чек-лист перед каждым релизом.
+  category: Разработка
+  icon: 🛡️
+  price: free
+  bullets:
+    - Сам определяет тип проекта и подбирает нужные проверки
+    - Находит утёкшие ключи и токены в коде и в истории git
+    - Проверяет библиотеки на известные уязвимости (CVE)
+    - Аудит авторизации, доступов и логики (IDOR, открытые маршруты)
+    - Проверяет настройки, деплой и CI/CD на опасные дефолты
+    - Ищет уязвимости кода по OWASP (инъекции, XSS, SSRF и др.)
+    - По разрешению проверяет уже опубликованный сайт или бота
+    - Отчёт простыми словами с шагами «как починить»
+  tags:
+    - security
+    - audit
+    - owasp
+    - secrets
+    - vulnerability
+    - russia-friendly
+  time:
+    typical: 5-15 минут
+
+author:
+  name: COMANDOS
+  github: Comandosai
+  url: https://comandos.ai
+
+links:
+  github: https://github.com/Comandosai/comandos-security-audit
+
+requirements:
+  - name: Node.js
+    version: ">=18"
+    install_url: https://nodejs.org
+  - name: Claude Code CLI
+    install_command: npm install -g @anthropic-ai/claude-code
+  - name: git
+    install_url: https://git-scm.com
+    optional: true
+
+install:
+  - type: claude-code-skill
+  - type: project-folder
+install_recommended: global
+
+platforms:
+  - { id: claude-code, name: Claude Code, supported: true }
+  - { id: codex, name: OpenAI Codex, supported: true }
+  - { id: antigravity, name: Google Antigravity, supported: true }
+
+stacks_supported:
+  - astro
+  - nextjs
+  - react
+  - nodejs
+  - python
+  - telegram-bot
+
+target_audience:
+  - indie-hackers
+  - small-business
+  - developers
+
+capabilities:
+  - 'Поиск утёкших секретов в коде и истории git'
+  - 'Аудит уязвимых зависимостей (npm audit, pip-audit)'
+  - 'Проверка авторизации и доступов (IDOR, открытые маршруты)'
+  - 'Аудит конфигов, деплоя и CI/CD'
+  - 'Поиск уязвимостей кода по OWASP'
+  - 'Аудит безопасности Telegram-бота'
+  - 'Live-проверка опубликованного сайта (заголовки, утечки)'
+  - 'Понятный отчёт о безопасности для не-программиста'
+
+triggers:
+  ru:
+    - 'проверь безопасность моего проекта'
+    - 'сделай аудит безопасности этого сайта'
+    - 'не утекут ли мои ключи и токены'
+    - 'проверь моего телеграм-бота на безопасность'
+    - 'есть ли уязвимости в этом коде'
+    - 'security audit перед запуском'
