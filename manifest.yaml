@@ -1,8 +1,8 @@
 schema: comandos-skill-manifest/v1
 slug: comandos-security-audit
 name: Аудит Безопасности COMANDOS
-version: 1.0.0
-released_at: 2026-06-24
+version: 1.0.1
+released_at: 2026-06-25
 
 card:
   tagline: >-
@@ -62,12 +62,17 @@ requirements:
     install_command: npm install -g @anthropic-ai/claude-code
   - name: git
     install_url: https://git-scm.com
-    optional: true
 
 install:
   - type: claude-code-skill
   - type: project-folder
 install_recommended: global
+
+# Шаги активации после установки — попадают в install-промт корзины
+# (без них резидент склонирует навык, но не поймёт, что дальше).
+install_activation:
+  - "Перезапусти Claude Code — закрой и открой заново (или начни новую сессию). Навык подхватывается только при старте сессии, иначе он не появится."
+  - "Открой свой проект и скажи: «проверь безопасность моего проекта». Навык сам определит тип проекта, всё проверит и выдаст понятный отчёт — больше ничего настраивать не нужно."
 
 platforms:
   - { id: claude-code, name: Claude Code, supported: true }
